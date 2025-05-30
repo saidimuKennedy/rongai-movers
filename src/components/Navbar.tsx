@@ -4,6 +4,9 @@ import { useRouter } from "next/router";
 import { Menu, X, Phone, ChevronDown } from "lucide-react";
 import { useModal } from "@/context/ModalContext";
 import QuoteForm from "./forms/QuoteForm";
+import toast from 'react-hot-toast'
+import { useSession,signOut } from "next-auth/react";
+import { Role } from "@prisma/client"; // Import the Role enum
 
 interface NavbarProps {
   isMenuOpen: boolean;
@@ -14,6 +17,7 @@ export default function Navbar({ isMenuOpen, setIsMenuOpen }: NavbarProps) {
   const router = useRouter();
   const { openModal } = useModal();
   const [isScrolled, setIsScrolled] = useState(false);
+  const { data: session, status } = useSession(); // Get session and status
 
   useEffect(() => {
     const handleScroll = () => {
@@ -25,6 +29,14 @@ export default function Navbar({ isMenuOpen, setIsMenuOpen }: NavbarProps) {
   }, []);
 
   const handleQuoteClick = () => {
+    if (status === "loading") return; // Do nothing while loading
+
+    if (!session) {
+      toast.error("Please sign in to get a quote")
+      router.push("/auth/signin");
+      setIsMenuOpen(false);
+      return;
+    }
     openModal("Get Your Free Quote", <QuoteForm />);
     setIsMenuOpen(false);
   };
@@ -71,8 +83,8 @@ export default function Navbar({ isMenuOpen, setIsMenuOpen }: NavbarProps) {
             ))}
           </nav>
 
-          {/* CTA Button */}
-          <div className="hidden md:flex items-center space-x-2">
+          {/* CTA Buttons and Auth/Role Links */}
+          <div className="hidden md:flex items-center space-x-4">
             <a
               href="tel:+254723084530"
               className="flex items-center text-gray-700 hover:text-[#E65C1C]"
@@ -86,6 +98,35 @@ export default function Navbar({ isMenuOpen, setIsMenuOpen }: NavbarProps) {
             >
               Get Quote
             </button>
+
+            {/* Conditional rendering based on session and role */}
+            {status === "loading" ? (
+              <div className="text-gray-700">Loading...</div>
+            ) : session ? (
+              <>
+                {session.user.role === Role.MOVER && (
+                  <Link href="/mover/dashboard" className="text-gray-700 hover:text-[#E65C1C]">
+                    Mover Dashboard
+                  </Link>
+                )}
+                {session.user.role === Role.ADMIN && (
+                  <Link href="/admin/dashboard" className="text-gray-700 hover:text-[#E65C1C]">
+                    Admin Dashboard
+                  </Link>
+                )}
+                {/* Add a sign out button if authenticated */}
+                 <button
+                    onClick={() => signOut()}
+                    className="text-gray-700 hover:text-[#E65C1C]"
+                  >
+                    Sign out
+                  </button>
+              </>
+            ) : (
+              <Link href="/auth/signin" className="text-gray-700 hover:text-[#E65C1C]">
+                Sign in
+              </Link>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -133,6 +174,34 @@ export default function Navbar({ isMenuOpen, setIsMenuOpen }: NavbarProps) {
           >
             Get Quote
           </button>
+
+           {/* Conditional rendering based on session and role for mobile */}
+           {status === "loading" ? (
+              <div className="block py-2 text-base font-medium text-gray-700">Loading...</div>
+            ) : session ? (
+              <>
+                {session.user.role === Role.MOVER && (
+                  <Link href="/mover/dashboard" className="block py-2 text-base font-medium text-gray-700 hover:text-[#E65C1C]" onClick={() => setIsMenuOpen(false)}>
+                    Mover Dashboard
+                  </Link>
+                )}
+                {session.user.role === Role.ADMIN && (
+                  <Link href="/admin/dashboard" className="block py-2 text-base font-medium text-gray-700 hover:text-[#E65C1C]" onClick={() => setIsMenuOpen(false)}>
+                    Admin Dashboard
+                  </Link>
+                )}
+                 <button
+                    onClick={() => signOut()}
+                    className="block py-2 text-base font-medium text-gray-700 hover:text-[#E65C1C]"
+                  >
+                    Sign out
+                  </button>
+              </>
+            ) : (
+              <Link href="/auth/signin" className="block py-2 text-base font-medium text-gray-700 hover:text-[#E65C1C]" onClick={() => setIsMenuOpen(false)}>
+                Sign in
+              </Link>
+            )}
         </div>
       </div>
     </header>

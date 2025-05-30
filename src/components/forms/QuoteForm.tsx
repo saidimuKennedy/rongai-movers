@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useModal } from "@/context/ModalContext";
 import toast from "react-hot-toast";
+import { useSession } from "next-auth/react";
 import { Loader2 } from "lucide-react";
 
 export default function QuoteForm() {
@@ -16,6 +17,8 @@ export default function QuoteForm() {
     serviceType: "moving",
     message: "",
   });
+
+  const { data: session } = useSession();
 
   const handleChange = (
     e: React.ChangeEvent<

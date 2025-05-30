@@ -1,6 +1,5 @@
-// quotes/useQuotes.ts
 import useSWR from "swr";
-
+// what does swr do 
 interface Quote {
   id: number;
   text: string;

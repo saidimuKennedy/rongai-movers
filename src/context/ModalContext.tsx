@@ -8,6 +8,7 @@ interface ModalContextType {
   closeModal: () => void;
 }
 
+// manage state of the modal
 const ModalContext = createContext<ModalContextType | undefined>(undefined);
 
 export function ModalProvider({ children }: { children: ReactNode }) {
@@ -26,6 +27,7 @@ export function ModalProvider({ children }: { children: ReactNode }) {
   };
 
   return (
+    // wrap 
     <ModalContext.Provider
       value={{
         isOpen,
@@ -40,6 +42,7 @@ export function ModalProvider({ children }: { children: ReactNode }) {
   );
 }
 
+// allow context be consumed 
 export function useModal() {
   const context = useContext(ModalContext);
   if (context === undefined) {

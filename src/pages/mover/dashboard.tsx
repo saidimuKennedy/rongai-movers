@@ -1,30 +1,25 @@
-// src/pages/mover/dashboard.tsx
+import useRequireAuth from "@/hooks/useRequiredAuth"; // Corrected import path
+import { Role } from "@prisma/client";
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
 
 export default function MoverDashboard() {
+  useRequireAuth(Role.MOVER);
   const { data: session, status } = useSession();
-  const router = useRouter();
-  const [quotes, setQuotes] = useState<{ id: string; origin: string; destination: string; moveDate: string }[]>([]);
+
+  const [quotes, setQuotes] = useState<
+    { id: string; origin: string; destination: string; moveDate: string }[]
+  >([]);
 
   useEffect(() => {
     if (status === "loading") return;
 
-    if (!session) {
-      router.push("/auth/signin");
-      return;
+    if (session) {
+      fetch("/api/movers/quotes")
+        .then((res) => res.json())
+        .then(setQuotes)
+        .catch((err) => console.error(err));
     }
-
-    if (session?.user?.role !== "mover") {
-      router.push("/unauthorized");
-      return;
-    }
-
-    fetch("/api/movers/quotes")
-      .then((res) => res.json())
-      .then(setQuotes)
-      .catch((err) => console.error(err));
   }, [session, status]);
 
   async function claimQuote(id: string) {
@@ -35,7 +30,6 @@ export default function MoverDashboard() {
     });
 
     if (res.ok) {
-      // Remove claimed quote from list
       setQuotes((prev) => prev.filter((q) => q.id !== id));
     } else {
       console.error("Failed to claim quote");

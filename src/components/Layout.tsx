@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import AuthButton from "./AuthButton";
 import Footer from "./Footer";
-import Sidebar from "./Sidebar";
 import ThemeToggle from "./ThemeToggle";
 import Modal from "./Modal";
 import toast, { Toaster } from "react-hot-toast";
