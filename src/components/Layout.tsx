@@ -5,6 +5,7 @@ import ThemeToggle from "./ThemeToggle";
 import Modal from "./Modal";
 import toast, { Toaster } from "react-hot-toast";
 import Navbar from "./Navbar";
+import { ModalProvider } from "@/context/ModalContext";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -30,14 +31,17 @@ export default function Layout({ children }: LayoutProps) {
   };
 
   return (
-    <div className="min-h-screen flex bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white transition-all">
-      <Toaster /> {/* Toast system */}
-      <div className="flex-1 flex flex-col">
+    <ModalProvider>
+      <div className="min-h-screen flex flex-col bg-gray-50">
         {/* Navbar */}
         <Navbar isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
 
         {/* main section */}
-        <main className="max-w-7xl mx-auto py-6 px-4">{children}</main>
+        <main className="flex-grow relative">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            {children}
+          </div>
+        </main>
 
         {/* footer */}
         <Footer services={[]} />
@@ -111,6 +115,6 @@ export default function Layout({ children }: LayoutProps) {
           </div>
         </Modal>
       </div>
-    </div>
+    </ModalProvider>
   );
 }

@@ -1,12 +1,16 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useModal } from "@/context/ModalContext";
 import toast from "react-hot-toast";
 import { useSession } from "next-auth/react";
 import { Loader2 } from "lucide-react";
+import { useRouter } from "next/router";
 
 export default function QuoteForm() {
   const { closeModal } = useModal();
   const [isLoading, setIsLoading] = useState(false);
+  const router = useRouter();
+  const { data: session, status } = useSession();
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -18,7 +22,15 @@ export default function QuoteForm() {
     message: "",
   });
 
-  const { data: session } = useSession();
+  useEffect(() => {
+    if (session?.user) {
+      setFormData((prev) => ({
+        ...prev,
+        name: session.user.name || prev.name,
+        email: session.user.email || prev.email,
+      }));
+    }
+  }, [session]);
 
   const handleChange = (
     e: React.ChangeEvent<
@@ -33,6 +45,14 @@ export default function QuoteForm() {
     e.preventDefault();
     setIsLoading(true);
 
+    if (status === "unauthenticated") {
+      setIsLoading(false);
+      toast.error("Please sign in to submit a quote request");
+      closeModal();
+      router.push("/auth/signin");
+      return;
+    }
+
     try {
       const response = await fetch("/api/quotes", {
         method: "POST",
@@ -40,17 +60,22 @@ export default function QuoteForm() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(formData),
+        credentials: "include", // Important: include credentials for session
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        throw new Error("Failed to submit quote request");
+        throw new Error(data.error || "Failed to submit quote request");
       }
 
       toast.success("Quote request submitted! We'll contact you soon.");
       closeModal();
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error submitting quote:", error);
-      toast.error("Failed to submit quote request. Please try again.");
+      toast.error(
+        error.message || "Failed to submit quote request. Please try again."
+      );
     } finally {
       setIsLoading(false);
     }
@@ -73,7 +98,7 @@ export default function QuoteForm() {
             placeholder="Your Name"
             value={formData.name}
             onChange={handleChange}
-            className="w-full p-2 border rounded focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+            className="w-full p-2 border dark:text-gray-500 rounded focus:ring-2 focus:ring-orange-500 focus:border-transparent"
             required
           />
         </div>
@@ -92,7 +117,7 @@ export default function QuoteForm() {
             placeholder="Your Email"
             value={formData.email}
             onChange={handleChange}
-            className="w-full p-2 border rounded focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+            className="w-full p-2 border dark:text-gray-500  rounded focus:ring-2 focus:ring-orange-500 focus:border-transparent"
             required
           />
         </div>
@@ -112,7 +137,7 @@ export default function QuoteForm() {
           placeholder="Your Phone"
           value={formData.phone}
           onChange={handleChange}
-          className="w-full p-2 border rounded focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+          className="w-full p-2 border dark:text-gray-500  rounded focus:ring-2 focus:ring-orange-500 focus:border-transparent"
           required
         />
       </div>
@@ -132,7 +157,7 @@ export default function QuoteForm() {
             placeholder="Origin Address"
             value={formData.origin}
             onChange={handleChange}
-            className="w-full p-2 border rounded focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+            className="w-full p-2 border dark:text-gray-500  rounded focus:ring-2 focus:ring-orange-500 focus:border-transparent"
           />
         </div>
 
@@ -150,7 +175,7 @@ export default function QuoteForm() {
             placeholder="Destination Address"
             value={formData.destination}
             onChange={handleChange}
-            className="w-full p-2 border rounded focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+            className="w-full p-2 border rounded dark:text-gray-500 focus:ring-2 focus:ring-orange-500 focus:border-transparent"
           />
         </div>
       </div>
@@ -211,7 +236,7 @@ export default function QuoteForm() {
           placeholder="Tell us more about your needs..."
           value={formData.message}
           onChange={handleChange}
-          className="w-full p-2 border rounded focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+          className="w-full p-2 border dark:text-gray-500  rounded focus:ring-2 focus:ring-orange-500 focus:border-transparent"
         />
       </div>
 
@@ -219,7 +244,7 @@ export default function QuoteForm() {
         <button
           type="button"
           onClick={closeModal}
-          className="px-4 py-2 text-gray-600 focus: hover:text-[#FF8A50] hover:text-gray-800"
+          className="px-4 py-2 text-gray-600 focus: hover:bg-[#FF8A50] rounded hover:text-gray-800 flex items-center justify-center"
           disabled={isLoading}
         >
           Cancel

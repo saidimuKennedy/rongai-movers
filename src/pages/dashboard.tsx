@@ -1,195 +1,207 @@
-import { useState, useEffect } from 'react';
-import { GetServerSideProps } from 'next';
-import { useSession, getSession } from 'next-auth/react';
-import { useRouter } from 'next/router';
-import { 
-  Loader2, Calendar, Phone, Mail, MapPin, 
-  Truck, Package, Clock, CheckCircle, XCircle 
-} from 'lucide-react';
-import type { Quote } from '@/types/quote';
+import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import {
+  Loader2,
+  Calendar,
+  MapPin,
+  Truck,
+  Package,
+  Clock,
+  CheckCircle,
+  XCircle,
+  Filter,
+} from "lucide-react";
+import type { Quote, QuoteStatus, ServiceType } from "@/types/quote";
+import toast from "react-hot-toast";
 
 export default function Dashboard() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [quotes, setQuotes] = useState<Quote[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [filter, setFilter] = useState('all');
+  const [filter, setFilter] = useState<"all" | QuoteStatus>("all");
 
   useEffect(() => {
-    if (status === 'unauthenticated') {
-      router.push('/auth/signin');
+    if (status === "unauthenticated") {
+      router.push("/auth/signin");
+      return;
     }
 
-    if (status === 'authenticated') {
+    if (status === "authenticated") {
+      if (session?.user?.role === "ADMIN") {
+        router.push("/admin/dashboard");
+        return;
+      } else if (session?.user?.role === "MOVER") {
+        router.push("/mover/dashboard");
+        return;
+      }
       fetchQuotes();
     }
-  }, [status, router]);
+  }, [status, router, session]);
 
   const fetchQuotes = async () => {
     try {
-      const response = await fetch('/api/quotes');
-      if (!response.ok) throw new Error('Failed to fetch quotes');
+      setIsLoading(true);
+      const response = await fetch("/api/quotes", {
+        credentials: "include",
+      });
+      if (!response.ok) throw new Error("Failed to fetch quotes");
       const data = await response.json();
       setQuotes(data);
     } catch (error) {
-      console.error('Error fetching quotes:', error);
+      console.error("Error fetching quotes:", error);
+      toast.error("Failed to fetch your quotes");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const updateQuoteStatus = async (id: string, status: string) => {
-    try {
-      const quote = quotes.find(q => q.id === id);
-      if (!quote) return;
-
-      const response = await fetch(`/api/quotes/${id}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...quote, status }),
-      });
-
-      if (!response.ok) throw new Error('Failed to update quote');
-      
-      setQuotes(quotes.map(q => 
-        q.id === id ? { ...q, status: status as Quote['status'] } : q
-      ));
-    } catch (error) {
-      console.error('Error updating quote:', error);
-    }
+  const getServiceIcon = (serviceType: ServiceType) => {
+    const icons = {
+      moving: <Truck className="h-5 w-5 text-orange-500" />,
+      office: <Package className="h-5 w-5 text-blue-500" />,
+      tv: <Package className="h-5 w-5 text-green-500" />,
+      longDistance: <Truck className="h-5 w-5 text-purple-500" />,
+      errand: <Package className="h-5 w-5 text-gray-500" />,
+    };
+    return icons[serviceType] || icons.errand;
   };
 
-  const getServiceIcon = (serviceType: string) => {
-    switch (serviceType) {
-      case 'moving':
-        return <Truck className="h-5 w-5 text-orange-500" />;
-      case 'office':
-        return <Package className="h-5 w-5 text-blue-500" />;
-      case 'tv':
-        return <Package className="h-5 w-5 text-green-500" />;
-      case 'longDistance':
-        return <Truck className="h-5 w-5 text-purple-500" />;
-      default:
-        return <Package className="h-5 w-5 text-gray-500" />;
-    }
-  };
-
-  const getStatusBadge = (status: Quote['status']) => {
+  const getStatusBadge = (status: QuoteStatus) => {
     const badges = {
-      PENDING: { bg: 'yellow', icon: Clock },
-      CONFIRMED: { bg: 'blue', icon: CheckCircle },
-      COMPLETED: { bg: 'green', icon: CheckCircle },
-      CANCELLED: { bg: 'red', icon: XCircle }
+      PENDING: { bg: "bg-yellow-100", text: "text-yellow-800", icon: Clock },
+      CONFIRMED: {
+        bg: "bg-blue-100",
+        text: "text-blue-800",
+        icon: CheckCircle,
+      },
+      COMPLETED: {
+        bg: "bg-green-100",
+        text: "text-green-800",
+        icon: CheckCircle,
+      },
+      CANCELLED: { bg: "bg-red-100", text: "text-red-800", icon: XCircle },
     };
 
-    const { bg, icon: Icon } = badges[status];
+    const badge = badges[status];
+    const Icon = badge.icon;
+
     return (
-      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-${bg}-100 text-${bg}-800`}>
-        <Icon className="h-3 w-3 mr-1" />
+      <span
+        className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium ${badge.bg} ${badge.text}`}
+      >
+        <Icon className="h-4 w-4" />
         {status.charAt(0) + status.slice(1).toLowerCase()}
       </span>
     );
   };
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    });
-  };
+  const filteredQuotes = quotes.filter((quote) => {
+    if (filter === "all") return true;
+    return quote.status === filter;
+  });
 
-  if (isLoading) {
+  if (status === "loading") {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <Loader2 className="h-8 w-8 animate-spin text-orange-500" />
+      <div className="flex items-center justify-center h-[60vh]">
+        <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Your Quotes</h1>
-        <select
-          value={filter}
-          onChange={(e) => setFilter(e.target.value)}
-          className="p-2 border rounded"
-        >
-          <option value="all">All Quotes</option>
-          <option value="PENDING">Pending</option>
-          <option value="CONFIRMED">Confirmed</option>
-          <option value="COMPLETED">Completed</option>
-          <option value="CANCELLED">Cancelled</option>
-        </select>
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">
+          My Quotes
+        </h1>
+
+        <div className="relative">
+          <select
+            value={filter}
+            onChange={(e) => setFilter(e.target.value as "all" | QuoteStatus)}
+            className="appearance-none bg-white border border-gray-300 rounded-lg py-2 pl-3 pr-10 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+          >
+            <option value="all">All Quotes</option>
+            <option value="PENDING">Pending</option>
+            <option value="CONFIRMED">Confirmed</option>
+            <option value="COMPLETED">Completed</option>
+            <option value="CANCELLED">Cancelled</option>
+          </select>
+          <Filter className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
+        </div>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {quotes
-          .filter(quote => filter === 'all' || quote.status === filter)
-          .map(quote => (
-            <div key={quote.id} className="border rounded-lg p-4 space-y-3">
-              <div className="flex justify-between items-start">
-                <div className="flex items-center space-x-2">
-                  {getServiceIcon(quote.serviceType)}
-                  <span className="font-medium">{quote.name}</span>
+      {isLoading ? (
+        <div className="flex items-center justify-center h-64">
+          <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
+        </div>
+      ) : filteredQuotes.length === 0 ? (
+        <div className="text-center py-12 bg-white rounded-xl shadow-sm">
+          <p className="text-gray-500">
+            {filter === "all"
+              ? "You haven't submitted any quotes yet"
+              : `No ${filter.toLowerCase()} quotes`}
+          </p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {filteredQuotes.map((quote) => (
+            <div
+              key={quote.id}
+              className="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow"
+            >
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    {getServiceIcon(quote.serviceType)}
+                    <span className="text-sm font-medium text-gray-600 capitalize">
+                      {quote.serviceType.replace(/([A-Z])/g, " $1").trim()}
+                    </span>
+                  </div>
+                  {getStatusBadge(quote.status)}
                 </div>
-                {getStatusBadge(quote.status)}
-              </div>
 
-              <div className="space-y-2 text-sm text-gray-600">
-                <div className="flex items-center space-x-2">
-                  <Calendar className="h-4 w-4" />
-                  <span>{formatDate(quote.moveDate)}</span>
+                <div className="space-y-3">
+                  <div className="flex items-start gap-2">
+                    <MapPin className="h-5 w-5 text-gray-400 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm text-gray-600">From</p>
+                      <p className="font-medium">{quote.origin}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <MapPin className="h-5 w-5 text-gray-400 flex-shrink-0 mt-0.5" />
+                    <div>
+                      <p className="text-sm text-gray-600">To</p>
+                      <p className="font-medium">{quote.destination}</p>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex items-center space-x-2">
-                  <MapPin className="h-4 w-4" />
-                  <span>{quote.origin} → {quote.destination}</span>
+
+                <div className="flex items-center gap-2 pt-2 border-t">
+                  <Calendar className="h-5 w-5 text-gray-400" />
+                  <p className="text-sm text-gray-600">
+                    {new Date(quote.moveDate).toLocaleDateString(undefined, {
+                      weekday: "long",
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </p>
                 </div>
-                {quote.phone && (
-                  <div className="flex items-center space-x-2">
-                    <Phone className="h-4 w-4" />
-                    <span>{quote.phone}</span>
+
+                {quote.message && (
+                  <div className="pt-2 border-t">
+                    <p className="text-sm text-gray-600">{quote.message}</p>
                   </div>
                 )}
               </div>
-
-              {quote.status === 'PENDING' && (
-                <div className="flex space-x-2 pt-2">
-                  <button
-                    onClick={() => updateQuoteStatus(quote.id, 'CONFIRMED')}
-                    className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm"
-                  >
-                    Confirm
-                  </button>
-                  <button
-                    onClick={() => updateQuoteStatus(quote.id, 'CANCELLED')}
-                    className="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              )}
             </div>
           ))}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await getSession(context);
-
-  if (!session) {
-    return {
-      redirect: {
-        destination: '/auth/signin',
-        permanent: false,
-      },
-    };
-  }
-
-  return {
-    props: { session }
-  };
-};

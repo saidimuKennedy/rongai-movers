@@ -1,10 +1,11 @@
-import NextAuth, { NextAuthOptions } from "next-auth";
+import NextAuth, { NextAuthOptions, Session, User } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { Role } from "@prisma/client";
 import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
+import { JWT } from "next-auth/jwt";
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -26,6 +27,14 @@ export const authOptions: NextAuthOptions = {
 
         const user = await prisma.user.findUnique({
           where: { email: credentials.email },
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            password: true,
+            role: true,
+            image: true,
+          },
         });
 
         if (
@@ -42,38 +51,36 @@ export const authOptions: NextAuthOptions = {
           name: user.name,
           image: user.image,
           role: user.role,
-        } as {
-          id: string;
-          email: string;
-          name: string | null;
-          image: string | null;
-          role: Role;
         };
       },
     }),
   ],
-  session: {
-    strategy: "database",
-  },
-  callbacks: {
-    async session({ session, user }) {
-      if (user) {
-        session.user = {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          image: user.image,
-          role: user.role,
-        };
-      }
-
-return session;
-    },
-  },
   pages: {
     signIn: "/auth/signin",
+    error: "/auth/signin",
+  },
+  callbacks: {
+    async jwt({ token, user, account, profile }) {
+      if (user) {
+        token.role = user.role;
+        token.id = user.id;
+      }
+      return token;
+    },
+    async session({ session, token, user }): Promise<Session> {
+      if (session.user) {
+        session.user.role = token.role as Role;
+        session.user.id = token.id as string;
+      }
+      return session;
+    },
+  },
+  session: {
+    strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   secret: process.env.NEXTAUTH_SECRET,
+  debug: process.env.NODE_ENV === "development",
 };
 
 export default NextAuth(authOptions);

@@ -16,7 +16,6 @@ import QuoteForm from "./forms/QuoteForm";
 
 export default function HomePage() {
   const { openModal } = useModal();
-  const [isQuoteOpen, setIsQuoteOpen] = useState(false);
 
   const handleQuoteClick = () => {
     openModal("Get Your Free Quote", <QuoteForm />);
