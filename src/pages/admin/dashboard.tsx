@@ -37,7 +37,7 @@ export default function AdminDashboard() {
   }, []);
 
   const StatCard = ({ title, value, icon: Icon, color }: any) => (
-    <div className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+    <div className="bg-white p-6 rounded shadow-sm hover:shadow-md transition-shadow">
       <div className="flex items-center justify-between">
         <div>
           <p className="text-sm font-medium text-gray-600">{title}</p>
@@ -96,7 +96,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Recent Activity Section */}
-      <div className="bg-white rounded-xl shadow-sm p-6">
+      <div className="bg-white rounded shadow-sm p-6">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">
           Recent Activity
         </h2>
@@ -111,7 +111,7 @@ export default function AdminDashboard() {
             {stats.recentActivity.map((activity) => (
               <div
                 key={activity.id}
-                className="flex items-start p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                className="flex items-start p-4 bg-gray-50 rounded hover:bg-gray-100 transition-colors"
               >
                 <div className="flex-1">
                   <div className="flex items-center justify-between gap-x-2">

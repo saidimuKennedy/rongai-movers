@@ -1,8 +1,7 @@
-
 import { useState } from "react";
 import { signIn } from "next-auth/react";
-import Link from "next/link";
-import { useModal } from "@/context/ModalContext";
+import { useShadModal } from "@/context/ModalContext";
+import SignUpForm from "./SignUpForm";
 
 interface SignInFormProps {
   message?: string | null;
@@ -15,7 +14,7 @@ const SignInForm: React.FC<SignInFormProps> = ({
   callbackUrl = "/",
   onSuccess,
 }) => {
-  const { closeModal } = useModal();
+  const { openModal } = useShadModal();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -39,8 +38,7 @@ const SignInForm: React.FC<SignInFormProps> = ({
     if (res?.error) {
       setError(res.error);
     } else if (res?.url) {
-      onSuccess?.(); // Trigger success action
-      closeModal(); // Close the modal on success
+      onSuccess?.();
       window.location.href = res.url;
     }
     setLoading(false);
@@ -48,6 +46,10 @@ const SignInForm: React.FC<SignInFormProps> = ({
 
   const handleOAuthSignIn = (providerId: string) => {
     signIn(providerId, { callbackUrl: callbackUrl ?? undefined });
+  };
+
+  const handleSignUp = () => {
+    openModal("Create your account", <SignUpForm />);
   };
 
   return (
@@ -115,12 +117,12 @@ const SignInForm: React.FC<SignInFormProps> = ({
         </form>
         <div className="text-center text-sm text-gray-600">
           Don't have an account?{" "}
-          <Link
-            href="/auth/signup"
-            className="font-medium text-[#E65C1C] hover:text-[#FF8A50]"
+          <button
+            onClick={() => openModal("Let us move!", <SignUpForm />)}
+            className="text-sm font-medium text-[#E65C1C] hover:text-[#FF8A50]"
           >
-            Sign up
-          </Link>
+            Sign In
+          </button>
         </div>
       </div>
     </div>

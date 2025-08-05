@@ -1,20 +1,25 @@
+import { CustomModal } from "@/components/CustomModal";
 import React, { createContext, useContext, useState, ReactNode } from "react";
 
+
 interface ModalContextType {
-  isOpen: boolean;
-  modalTitle: string;
-  modalContent: ReactNode;
   openModal: (title: string, content: ReactNode) => void;
   closeModal: () => void;
 }
 
-// manage state of the modal
-const ModalContext = createContext<ModalContextType | undefined>(undefined);
+const ShadModalContext = createContext<ModalContextType | undefined>(undefined);
 
-export function ModalProvider({ children }: { children: ReactNode }) {
+export const useShadModal = () => {
+  const ctx = useContext(ShadModalContext);
+  if (!ctx)
+    throw new Error("useShadModal must be used within ShadModalProvider");
+  return ctx;
+};
+
+export const ShadModalProvider = ({ children }: { children: ReactNode }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [modalTitle, setModalTitle] = useState("");
   const [modalContent, setModalContent] = useState<ReactNode>(null);
+  const [modalTitle, setModalTitle] = useState("");
 
   const openModal = (title: string, content: ReactNode) => {
     setModalTitle(title);
@@ -24,29 +29,16 @@ export function ModalProvider({ children }: { children: ReactNode }) {
 
   const closeModal = () => {
     setIsOpen(false);
+    setModalTitle("");
+    setModalContent(null);
   };
 
   return (
-    // wrap 
-    <ModalContext.Provider
-      value={{
-        isOpen,
-        modalTitle,
-        modalContent,
-        openModal,
-        closeModal,
-      }}
-    >
+    <ShadModalContext.Provider value={{ openModal, closeModal }}>
       {children}
-    </ModalContext.Provider>
+      <CustomModal open={isOpen} title={modalTitle} onClose={closeModal}>
+        {modalContent}
+      </CustomModal>
+    </ShadModalContext.Provider>
   );
-}
-
-// allow context be consumed 
-export function useModal() {
-  const context = useContext(ModalContext);
-  if (context === undefined) {
-    throw new Error("useModal must be used within a ModalProvider");
-  }
-  return context;
-}
+};

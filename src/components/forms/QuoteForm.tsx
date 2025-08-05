@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
-import { useModal } from "@/context/ModalContext";
+import { useShadModal } from "@/context/ModalContext";
 import toast from "react-hot-toast";
 import { useSession } from "next-auth/react";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/router";
 
 export default function QuoteForm() {
-  const { closeModal } = useModal();
+  const { closeModal } = useShadModal();
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { data: session, status } = useSession();

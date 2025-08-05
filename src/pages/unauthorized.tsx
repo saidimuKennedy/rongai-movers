@@ -5,13 +5,13 @@ export default function Unauthorized() {
   const { data: session } = useSession();
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full px-6 py-8 bg-white rounded-lg shadow-md">
+      <div className="max-w-md w-full px-6 py-8 bg-white rounded shadow-md">
         <div className="text-center">
           <h1 className="text-3xl font-bold text-gray-900 mb-4">
             Access Denied
           </h1>
           <div className="mb-6">
-            <div className="p-4 bg-yellow-50 rounded-lg">
+            <div className="p-4 bg-yellow-50 rounded">
               <p className="text-yellow-800">
                 You don't have permission to access this page.
                 {session?.user?.role && (

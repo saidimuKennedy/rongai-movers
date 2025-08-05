@@ -121,7 +121,7 @@ export default function Dashboard() {
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value as "all" | QuoteStatus)}
-            className="appearance-none bg-white border border-gray-300 rounded-lg py-2 pl-3 pr-10 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+            className="appearance-none bg-white border border-gray-300 rounded py-2 pl-3 pr-10 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
           >
             <option value="all">All Quotes</option>
             <option value="PENDING">Pending</option>
@@ -138,7 +138,7 @@ export default function Dashboard() {
           <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
         </div>
       ) : filteredQuotes.length === 0 ? (
-        <div className="text-center py-12 bg-white rounded-xl shadow-sm">
+        <div className="text-center py-12 bg-white rounded shadow-sm">
           <p className="text-gray-500">
             {filter === "all"
               ? "You haven't submitted any quotes yet"
@@ -150,7 +150,7 @@ export default function Dashboard() {
           {filteredQuotes.map((quote) => (
             <div
               key={quote.id}
-              className="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow"
+              className="bg-white rounded shadow-sm p-6 hover:shadow-md transition-shadow"
             >
               <div className="space-y-4">
                 <div className="flex items-center justify-between">

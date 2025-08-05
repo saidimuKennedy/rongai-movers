@@ -95,7 +95,7 @@ export default function MoverDashboard() {
         <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">
           Mover Dashboard
         </h1>
-        <div className="flex gap-2 bg-gray-100 p-1 rounded-lg">
+        <div className="flex gap-2 bg-gray-100 p-1 rounded">
           <button
             onClick={() => setActiveTab("available")}
             className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
@@ -124,7 +124,7 @@ export default function MoverDashboard() {
           <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
         </div>
       ) : quotes.length === 0 ? (
-        <div className="text-center py-12 bg-white rounded-xl shadow-sm">
+        <div className="text-center py-12 bg-white rounded shadow-sm">
           <p className="text-gray-500">
             {activeTab === "available"
               ? "No available jobs at the moment"
@@ -136,7 +136,7 @@ export default function MoverDashboard() {
           {quotes.map((quote) => (
             <div
               key={quote.id}
-              className="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow"
+              className="bg-white rounded shadow-sm p-6 hover:shadow-md transition-shadow"
             >
               <div className="space-y-4">
                 <div className="space-y-2">
@@ -189,7 +189,7 @@ export default function MoverDashboard() {
                   {activeTab === "available" ? (
                     <button
                       onClick={() => claimQuote(quote.id)}
-                      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium"
+                      className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors text-sm font-medium"
                     >
                       Claim Job
                     </button>
@@ -200,7 +200,7 @@ export default function MoverDashboard() {
                           onClick={() =>
                             updateQuoteStatus(quote.id, "COMPLETED")
                           }
-                          className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm font-medium inline-flex items-center gap-2"
+                          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors text-sm font-medium inline-flex items-center gap-2"
                         >
                           <CheckCircle className="h-4 w-4" />
                           Complete
@@ -211,7 +211,7 @@ export default function MoverDashboard() {
                           onClick={() =>
                             updateQuoteStatus(quote.id, "CANCELLED")
                           }
-                          className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-medium inline-flex items-center gap-2"
+                          className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors text-sm font-medium inline-flex items-center gap-2"
                         >
                           <XCircle className="h-4 w-4" />
                           Cancel

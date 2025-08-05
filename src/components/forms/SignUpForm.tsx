@@ -1,9 +1,9 @@
-// components/forms/SignUpForm.tsx
 import { useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { signIn } from "next-auth/react";
-import { useModal } from "@/context/ModalContext"; // Use generic modal context
+import { useShadModal } from "@/context/ModalContext";
+import SignInForm from "./SignInForm";
 
 interface SignUpFormProps {
   onSuccess?: () => void;
@@ -11,7 +11,7 @@ interface SignUpFormProps {
 
 export default function SignUpForm({ onSuccess }: SignUpFormProps) {
   const router = useRouter();
-  const { closeModal } = useModal(); // Use generic closeModal
+  const { openModal, closeModal } = useShadModal();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -65,12 +65,10 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
         password: formData.password,
       });
 
-      if (result?.error) {
-        throw new Error(result.error);
-      }
+      if (result?.error) throw new Error(result.error);
 
-      onSuccess?.(); // Trigger success action
-      closeModal(); // Close the modal on success
+      onSuccess?.();
+      closeModal();
       router.push("/dashboard");
     } catch (err: any) {
       setError(err.message);
@@ -80,99 +78,81 @@ export default function SignUpForm({ onSuccess }: SignUpFormProps) {
   };
 
   return (
-    // REMOVE the outer div "min-h-screen flex items-center..."
-    <div className="space-y-8"> {/* Keep the inner content wrapper styles if you like */}
+    <div className="space-y-6">
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+        <div className="bg-red-50 border border-red-300 text-red-700 px-4 py-2 rounded-md text-sm">
           {error}
         </div>
       )}
 
-      <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-        <div className="rounded-md shadow-sm space-y-4">
-          {/* Inputs */}
-          <div>
-            <label htmlFor="name" className="sr-only">Full Name</label>
-            <input
-              id="name"
-              name="name"
-              type="text"
-              required
-              className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-orange-500 focus:border-orange-500 focus:z-10 sm:text-sm"
-              placeholder="Full Name"
-              value={formData.name}
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <label htmlFor="email" className="sr-only">Email address</label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              autoComplete="email"
-              required
-              className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-orange-500 focus:border-orange-500 focus:z-10 sm:text-sm"
-              placeholder="Email address"
-              value={formData.email}
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <label htmlFor="password" className="sr-only">Password</label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              autoComplete="new-password"
-              required
-              className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-orange-500 focus:border-orange-500 focus:z-10 sm:text-sm"
-              placeholder="Password"
-              value={formData.password}
-              onChange={handleChange}
-            />
-          </div>
-          <div>
-            <label htmlFor="confirmPassword" className="sr-only">Confirm Password</label>
-            <input
-              id="confirmPassword"
-              name="confirmPassword"
-              type="password"
-              autoComplete="new-password"
-              required
-              className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-orange-500 focus:border-orange-500 focus:z-10 sm:text-sm"
-              placeholder="Confirm Password"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-            />
-          </div>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        <div className="grid gap-4">
+          <input
+            id="name"
+            name="name"
+            type="text"
+            placeholder="Full Name"
+            required
+            value={formData.name}
+            onChange={handleChange}
+            className="w-full px-4 py-2 rounded-md border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+          />
+
+          <input
+            id="email"
+            name="email"
+            type="email"
+            placeholder="Email Address"
+            required
+            value={formData.email}
+            onChange={handleChange}
+            className="w-full px-4 py-2 rounded-md border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+          />
+
+          <input
+            id="password"
+            name="password"
+            type="password"
+            placeholder="Password"
+            required
+            value={formData.password}
+            onChange={handleChange}
+            className="w-full px-4 py-2 rounded-md border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+          />
+
+          <input
+            id="confirmPassword"
+            name="confirmPassword"
+            type="password"
+            placeholder="Confirm Password"
+            required
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            className="w-full px-4 py-2 rounded-md border border-gray-300 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+          />
         </div>
 
-        <div>
-          <button
-            type="submit"
-            disabled={loading}
-            className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500"
-          >
-            {loading ? "Creating account..." : "Sign up"}
-          </button>
-        </div>
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full bg-[#E65C1C] hover:bg-[#FF8A50] text-white py-2 px-4 rounded-md font-medium transition-all duration-300"
+        >
+          {loading ? "Creating account..." : "Sign up"}
+        </button>
 
-        <div className="text-sm text-center">
+        <p className="text-sm text-center">
+          Already have an account?{" "}
           <Link
-            href="/auth/signin" // Or trigger signIn modal
-            className="font-medium text-orange-600 hover:text-orange-500"
+            href="#"
+            className="text-[#E65C1C] hover:text-[#FF8A50] font-semibold"
             onClick={(e) => {
               e.preventDefault();
-              closeModal(); // Close signup modal
-              // Option to open sign in modal right after
-              // openModal("Log in to your account", <SignInForm />);
-              router.push("/auth/signin"); // Or navigate to signin page
+              openModal("Log in to your account", <SignInForm />);
             }}
           >
-            Already have an account? Sign in
+            Sign in
           </Link>
-        </div>
+        </p>
       </form>
     </div>
   );

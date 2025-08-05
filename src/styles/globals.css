@@ -33,3 +33,195 @@
 .animate-bob {
   animation: bob 4s ease-in-out infinite;
 }
+/* Add these new keyframes and classes to your globals.css */
+
+@keyframes country-wide-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0px 0px rgba(230, 92, 28, 0.4); /* No shadow at start/end */
+    color: inherit; /* Default text color */
+    background-color: theme(
+      "colors.gray.100"
+    ); /* Default light gray background */
+  }
+  50% {
+    box-shadow: 0 0 10px 3px rgba(230, 92, 28, 0.7); /* Orange glow */
+    color: white; /* Text becomes white */
+    background-color: #e65c1c; /* Background becomes orange */
+  }
+}
+
+.animate-country-wide-glow {
+  animation: country-wide-glow 2.5s ease-in-out infinite alternate;
+  background-color: theme("colors.gray.100"); /* Initial background */
+  color: theme(
+    "colors.gray.800"
+  ); /* Initial text color (adjust if dark mode is different) */
+  /* For dark mode, you might need a media query or a specific class to ensure it starts dark: */
+  /* @apply dark:bg-gray-700 dark:text-gray-200; */
+}
+
+/* If you need dark mode support, ensure your @keyframes respects it or create a dark mode specific animation */
+.dark .animate-country-wide-glow {
+  background-color: theme("colors.gray.700"); /* Initial dark background */
+  color: theme("colors.gray.200"); /* Initial dark text color */
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
+  }
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+:root {
+  --ribbon-height: 82px; /* You can adjust this value */
+}
+
+.corner-ribbon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: var(--ribbon-height);
+  height: var(--ribbon-height);
+  background: #612307;
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+  z-index: 11;
+  /* Add any transitions or other styling here */
+}
+
+/* box  */
+.scene {
+  width: 300px;
+  height: 300px;
+  perspective: 1000px;
+  transform: translateX(150px) translateZ(-100px) translateY(-50px); /* BACK and to the right */
+}
+
+.cube {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 1s;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25); /* soft floating shadow */
+}
+
+.face {
+  position: absolute;
+  width: 300px;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  background-color: rgba(255, 165, 0, 0.95);
+  border: 2px solid #f97316;
+  color: white;
+  backface-visibility: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* shadow per face for realism */
+}
+
+.front {
+  transform: rotateY(0deg) translateZ(150px);
+}
+.back {
+  transform: rotateY(180deg) translateZ(150px);
+}
+.right {
+  transform: rotateY(90deg) translateZ(150px);
+}
+.left {
+  transform: rotateY(-90deg) translateZ(150px);
+}
+.top {
+  transform: rotateX(90deg) translateZ(150px);
+}
+.bottom {
+  transform: rotateX(-90deg) translateZ(150px);
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  background-color: #f97316;
+  color: white;
+  border-radius: 0.375rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn:hover {
+  background-color: #ea580c;
+}
+
+.top-face::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 10%;
+  width: 80%;
+  height: 2px;
+  background-color: #a43e00; /* deep orange-brown for that cardboard seam */
+  transform: translateY(-50%);
+  z-index: 2;
+  opacity: 0.7;
+}
