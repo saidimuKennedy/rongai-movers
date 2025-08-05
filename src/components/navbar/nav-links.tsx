@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 const links = [
   { name: "Home", href: "/" },
   { name: "Testimonials", href: "/#testimonials" },
-  { name: "About Us", href: "/about" },
+  { name: "About Us", href: "#" },
 ];
 
 export default function NavLinks() {
