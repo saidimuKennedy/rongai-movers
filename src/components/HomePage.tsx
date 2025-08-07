@@ -78,7 +78,7 @@ export default function HomePage() {
   const testimonials = [
     {
       quote:
-        "Nilihama kutoka Rongai mpaka Westlands bila stress yoyote. Professional sana!",
+        "Nilihama kutoka Rongai mpaka Westi bila stress yoyote. Professional sana!",
       name: "Sarah Kamau",
       location: "Westlands, Nairobi",
       rating: 5,
@@ -87,7 +87,7 @@ export default function HomePage() {
     },
     {
       quote:
-        "Walifanya kazi nzuri sana wakihamisha office yangu. Bei yao ni poa na service ni the best.",
+        "Walifanya kazi fiti sana wakihamisha office yangu. Bei yao ni poa na service ni the best.",
       name: "Michael Ouma",
       location: "Kilimani, Nairobi",
       rating: 5,
@@ -96,7 +96,7 @@ export default function HomePage() {
     },
     {
       quote:
-        "TV yangu walitundika vizuri na kwa uangalifu. Nitawarekomena kwa marafiki zangu.",
+        "TV yangu walieeka vizuri haikuvunjika. Nitawarecommend kwa marafiki zangu.",
       name: "Alice Wambui",
       location: "Rongai, Kajiado",
       rating: 5,
@@ -145,11 +145,6 @@ export default function HomePage() {
         "We recommend booking at least 1-2 weeks in advance, especially during peak seasons. However, we also accommodate last-minute moves when possible.",
     },
     {
-      question: "Are my belongings insured during the move?",
-      answer:
-        "Absolutely! All moves are covered by comprehensive insurance. We also offer additional coverage options for high-value items.",
-    },
-    {
       question: "Do you move on weekends and holidays?",
       answer:
         "Yes, we operate 7 days a week including weekends and most holidays to accommodate your schedule.",
@@ -163,11 +158,6 @@ export default function HomePage() {
       question: "Can you disassemble and reassemble furniture?",
       answer:
         "Yes! Our team is trained to safely disassemble and reassemble furniture, including beds, wardrobes, and office furniture.",
-    },
-    {
-      question: "What if something gets damaged during the move?",
-      answer:
-        "While rare, if damage occurs, our insurance covers repairs or replacement. We handle all claims quickly and fairly.",
     },
   ];
 
