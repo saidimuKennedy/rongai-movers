@@ -31,6 +31,7 @@ import {
 import BoxCube from "./animations/cube";
 import AdvantageSection from "./AdvantageSection";
 import QuoteButton from "./navbar/quote-button";
+import ServicesSection from "./ServicesSection";
 
 const Container = ({
   children,
@@ -127,15 +128,6 @@ export default function HomePage() {
     },
   ];
 
-  const clientLogos = [
-    { name: "Nakumatt", moved: "50+ locations" },
-    { name: "Equity Bank", moved: "30+ branches" },
-    { name: "Safaricom", moved: "25+ offices" },
-    { name: "KCB Group", moved: "20+ branches" },
-    { name: "NCBA Bank", moved: "15+ offices" },
-    { name: "Co-op Bank", moved: "35+ locations" },
-  ];
-
   const faqs = [
     {
       question: "How much does a typical move cost?",
@@ -179,35 +171,6 @@ export default function HomePage() {
     },
   ];
 
-  // Service highlights for the cube section
-  const serviceHighlights = [
-    {
-      icon: <Home className="h-5 w-5" />,
-      title: "Residential Moving",
-      desc: "Safe home relocations with care",
-    },
-    {
-      icon: <Building className="h-5 w-5" />,
-      title: "Office Moving",
-      desc: "Business relocations made easy",
-    },
-    {
-      icon: <Package className="h-5 w-5" />,
-      title: "Packing Services",
-      desc: "Professional packing solutions",
-    },
-    {
-      icon: <Truck className="h-5 w-5" />,
-      title: "Transportation",
-      desc: "Reliable moving vehicles",
-    },
-    {
-      icon: <Shield className="h-5 w-5" />,
-      title: "Insurance",
-      desc: "Full coverage protection",
-    },
-  ];
-
   // Auto-rotate testimonials
   useEffect(() => {
     const interval = setInterval(() => {
@@ -227,7 +190,7 @@ export default function HomePage() {
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          className="absolute -inset-4 sm:-inset-6 rounded-full bg-yellow-400 opacity-30 blur-xl"
+          className="absolute -inset-4 sm:-inset-6 rounded-full bg-yellow-400 opacity-30 blur-2xl"
         ></motion.div>
         <div className="absolute inset-0 rounded-full bg-[#E65C1C] opacity-80"></div>
         <div className="absolute inset-3 sm:inset-4 rounded-full bg-orange-400 opacity-50 blur-sm"></div>
@@ -339,7 +302,7 @@ export default function HomePage() {
                   }}
                 >
                   <Play className="mr-2 h-4 w-4 sm:h-5 sm:w-5" />
-                  Explore Services
+                  Explore Sections
                 </motion.button>
               </motion.div>
 
@@ -380,8 +343,17 @@ export default function HomePage() {
         <div className="absolute bottom-0 left-0 right-0 h-6 sm:h-8 bg-white transform -translate-y-1/2 rounded-tl-full rounded-tr-full"></div>
       </section>
 
-      {/* Interactive Cube Section */}
-      <section id="interactive-cube" className="py-16 sm:py-20 bg-white">
+      {/* Our Services Section */}
+      <ServicesSection />
+
+      {/* Enhanced Interactive Cube Section - Clear Navigation Purpose */}
+      <section
+        id="interactive-cube"
+        className="py-16 sm:py-20 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden"
+      >
+        {/* Background decoration */}
+        <div className="absolute inset-0 bg-grid-pattern opacity-5"></div>
+
         <Container>
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -391,16 +363,20 @@ export default function HomePage() {
             className="text-center mb-12 sm:mb-16"
           >
             <h2 className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-900 mb-4 sm:mb-6">
-              Explore Our Services
+              Explore Our Site in 3D
             </h2>
-            <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto">
-              Navigate through our services with our interactive 3D menu. Click
-              any face to learn more!
+            <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto mb-8">
+              Skip boring menus! Use our interactive 3D cube to navigate through
+              different sections.
+              <strong className="text-gray-800">
+                {" "}
+                Just hover and click any face.
+              </strong>
             </p>
           </motion.div>
 
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-            {/* Left Content */}
+            {/* Left Content - Enhanced */}
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -410,40 +386,24 @@ export default function HomePage() {
             >
               <div>
                 <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">
-                  Interactive Service Navigation
+                  What's inside the box? Find out more
                 </h3>
-                <p className="text-lg text-gray-600 mb-6">
-                  Experience our services in a fun, interactive way. Move your
-                  mouse to rotate the cube, click any face to explore what we
-                  offer, or use keyboard controls for navigation.
+                <p className="text-lg text-gray-600 mb-8">
+                  Experience our website like never before! Each face of the
+                  cube represents a different section. Move your mouse to
+                  explore, then click any face to jump straight to that content.
                 </p>
-              </div>
 
-              <div className="space-y-4">
-                {serviceHighlights.map((service, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: i * 0.1 }}
-                    className="flex items-center space-x-4 p-4 bg-gray-50 rounded-xl hover:bg-orange-50 transition-colors"
-                  >
-                    <div className="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center text-orange-600">
-                      {service.icon}
-                    </div>
-                    <div>
-                      <h4 className="font-semibold text-gray-900 mb-1">
-                        {service.title}
-                      </h4>
-                      <p className="text-sm text-gray-600">{service.desc}</p>
-                    </div>
-                  </motion.div>
-                ))}
+                {/* Call to Action */}
+                <div className="bg-orange-50 border border-orange-200 rounded-lg p-4">
+                  <p className="text-orange-700 text-center font-medium">
+                    Try interacting with the cube now!
+                  </p>
+                </div>
               </div>
             </motion.div>
 
-            {/* Right - Cube Component */}
+            {/* Right - Enhanced Cube Component */}
             <motion.div
               initial={{ opacity: 0, x: 50 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -451,7 +411,20 @@ export default function HomePage() {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="relative h-[600px] lg:h-[700px]"
             >
+              {/* Attention-grabbing background glow */}
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-400/10 via-purple-400/10 to-pink-400/10 rounded-2xl blur-2xl animate-pulse"></div>
+
+              {/* Corner hint */}
+              <div className="absolute top-4 right-4 bg-yellow-100 text-yellow-800 px-3 py-1 rounded-full text-xs font-medium z-10">
+                Interactive
+              </div>
+
               <BoxCube />
+
+              {/* Bottom instruction for mobile */}
+              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black/75 text-white px-4 py-2 rounded-lg text-sm lg:hidden">
+                Tap any face to navigate
+              </div>
             </motion.div>
           </div>
         </Container>
@@ -615,8 +588,7 @@ export default function HomePage() {
               </motion.div>
             </AnimatePresence>
 
-            {/* Testimonial indicators, read about my story with them
-             */} 
+            {/* Testimonial indicators */}
             <div className="flex justify-center mt-6 sm:mt-8 space-x-2">
               {testimonials.map((_, i) => (
                 <motion.button

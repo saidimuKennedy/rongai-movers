@@ -1,3 +1,10 @@
+import About from "@/components/AboutSection";
+import Contact from "@/components/ContactSection";
+// import TrackingSection from "@/components/TrackingSection";
+import Gallery from "@/components/GallerySection";
+//import  Offers from "@/components/OffersSection"
+//import  Careers from "@/components/CareersSection"
+//import  Portfolio from "@/components/PortfolioSection"
 import {
   ChevronLeft,
   ChevronRight,
@@ -6,8 +13,17 @@ import {
   RefreshCcw,
 } from "lucide-react";
 import React, { useState, useEffect, useRef } from "react";
+import Testimonials from "../testimonials";
 
-export default function BoxCube() {
+const faceComponents = {
+  About: About,
+  Contact: Contact,
+  Gallery: Gallery,
+  //Portfolio: Portfolio,
+  Testimonials: Testimonials,
+};
+
+export default function BoxCube(): JSX.Element {
   const [rotation, setRotation] = useState({ x: -15, y: -25 });
   const [mouseRotation, setMouseRotation] = useState({ x: 0, y: 0 });
   const [activeFace, setActiveFace] = useState<number | null>(null);
@@ -24,12 +40,12 @@ export default function BoxCube() {
     "inset -4px -4px 6px rgba(0,0,0,0.15), inset 4px 4px 6px rgba(255,255,255,0.05)";
 
   const faces = [
-    { id: 1, name: "Home" },
-    { id: 2, name: "About" },
-    { id: 3, name: "Services" },
-    { id: 4, name: "Contact" },
-    { id: 5, name: "FAQ" },
-    { id: 6, name: "Tracking" },
+    { id: 1, name: "Careers" },
+    { id: 2, name: "Contact" },
+    { id: 3, name: "Gallery" },
+    { id: 4, name: "Testimonials" },
+    { id: 5, name: "About" },
+    { id: 6, name: "Portfolio" },
   ];
 
   const rotate = (axis: "x" | "y", value: number) => {
@@ -73,7 +89,7 @@ export default function BoxCube() {
 
   const handleFaceClick = (faceIndex: number) => {
     if (activeFace === faceIndex) {
-      setActiveFace(null); 
+      setActiveFace(null);
     } else {
       setActiveFace(faceIndex);
     }
@@ -144,12 +160,17 @@ export default function BoxCube() {
     y: rotation.y + mouseRotation.y,
   };
 
+  const activeFaceName = activeFace !== null ? faces[activeFace].name : null;
+  const ComponentToRender: React.ElementType | null = activeFaceName && activeFaceName in faceComponents
+    ? faceComponents[activeFaceName as keyof typeof faceComponents]
+    : null;
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen w-full bg-gray-50 gap-8 overflow-hidden relative">
       {/* Fullscreen Face Overlay */}
       {activeFace !== null && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center cursor-pointer"
+          className="fixed inset-0 z-50 cursor-pointer"
           style={{
             background: cardboardColor,
             animation: "telescopeIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94)",
@@ -157,20 +178,34 @@ export default function BoxCube() {
           onClick={() => setActiveFace(null)}
           onTouchEnd={() => setActiveFace(null)}
         >
-          <div className="text-center text-white">
-            <h1 className="text-6xl md:text-8xl font-bold mb-8 drop-shadow-2xl">
-              {faces[activeFace].name}
-            </h1>
-            <p className="text-xl md:text-2xl opacity-90 mb-8">
-              Welcome to the {faces[activeFace].name} section
-            </p>
-            <div className="text-lg opacity-75">
-              <p>Click anywhere, press ESC, or tap to return</p>
-            </div>
+          {/* Inner Content Container */}
+          <div
+            className="relative bg-white text-black shadow-2xl w-full h-full overflow-y-scroll"
+            onClick={(e) => e.stopPropagation()} // Prevent backdrop click from closing
+          >
+            <button
+              onClick={() => setActiveFace(null)}
+              className="absolute top-4 left-4 p-2 bg-white rounded-full shadow-lg z-50"
+              aria-label="Back to cube"
+            >
+              <ChevronLeft size={24} />
+            </button>
+             {/* 3. Render the component dynamically */}
+            {ComponentToRender ? (
+              <ComponentToRender /> // This line is causing the error
+            ) : (
+              <div className="text-center py-10">
+                <h1 className="text-4xl font-bold">{activeFaceName}</h1>
+                <p className="mt-4 text-gray-600">
+                  This section is coming soon. Tap anywhere to exit.
+                </p>
+              </div>
+            )}
           </div>
 
+
           {/* Animated background elements */}
-          <div className="absolute inset-0 opacity-10">
+          {/* <div className="absolute inset-0 opacity-10">
             {[...Array(20)].map((_, i) => (
               <div
                 key={i}
@@ -187,7 +222,7 @@ export default function BoxCube() {
                 }}
               />
             ))}
-          </div>
+          </div> */}
         </div>
       )}
 
@@ -242,7 +277,7 @@ export default function BoxCube() {
       <div className="mouse-tracking-indicator">
         <span
           className={`inline-block w-2 h-2 rounded-full mr-2 ${
-            isMouseTracking ? "bg-green-400" : "bg-red-400"
+            isMouseTracking ? "bg-orange-400" : "bg-red-400"
           }`}
         ></span>
         Mouse Tracking: {isMouseTracking ? "ON" : "OFF"}
@@ -310,7 +345,7 @@ export default function BoxCube() {
             <div
               className={`absolute w-48 h-48 flex items-center justify-center text-lg font-bold text-orange-900 border-2 border-amber-700 face-interactive ${
                 focusedFace === 0 ? "face-focused" : ""
-              }`} 
+              }`}
               style={{
                 background: cardboardColor,
                 transform: "rotateY(0deg) translateZ(96px)",
@@ -324,7 +359,6 @@ export default function BoxCube() {
               }}
             >
               {faces[0].name}
-              
             </div>
 
             <div
