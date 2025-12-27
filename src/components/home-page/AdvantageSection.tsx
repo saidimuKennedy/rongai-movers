@@ -6,6 +6,7 @@ import {
   Headphones,
   DollarSign,
   TrendingUp,
+  Settings,
 } from "lucide-react";
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -25,12 +26,6 @@ export default function AdvantagesSection() {
       icon: <Truck />,
     },
     {
-      title: "Insurance Coverage",
-      description:
-        "Your valuable belongings are protected with full insurance coverage during transit.",
-      icon: <Shield />,
-    },
-    {
       title: "24/7 Support",
       description:
         "Our customer support team is available round-the-clock to assist you with your needs.",
@@ -47,6 +42,12 @@ export default function AdvantagesSection() {
       description:
         "With a 99.9% customer satisfaction rate, our reputation speaks for itself.",
       icon: <TrendingUp />,
+    },
+    {
+      title: "Flexible Services",
+      description:
+        "Whether it’s a single item or a whole house move, we adapt to your needs and schedule.",
+      icon: <Settings />,
     },
   ];
 

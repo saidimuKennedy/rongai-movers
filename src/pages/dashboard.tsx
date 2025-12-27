@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import type { Quote, QuoteStatus, ServiceType } from "@/types/quote";
 import toast from "react-hot-toast";
+import React from "react";
 
 export default function Dashboard() {
   const { data: session, status } = useSession();
@@ -56,6 +57,20 @@ export default function Dashboard() {
       setIsLoading(false);
     }
   };
+
+  const Container = ({
+    children,
+    className = "",
+  }: {
+    children: React.ReactNode;
+    className?: string;
+  }) => (
+    <div
+      className={`mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 md:py-12 ${className}`}
+    >
+      {children}
+    </div>
+  );
 
   const getServiceIcon = (serviceType: ServiceType) => {
     const icons = {
@@ -111,97 +126,106 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">
-          My Quotes
-        </h1>
+    <Container>
+      <main className="">
+        <div className="space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <h1 className="text-2xl font-bold text-gray-900 sm:text-3xl">
+              My Quotes
+            </h1>
 
-        <div className="relative">
-          <select
-            value={filter}
-            onChange={(e) => setFilter(e.target.value as "all" | QuoteStatus)}
-            className="appearance-none bg-white border border-gray-300 rounded py-2 pl-3 pr-10 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
-          >
-            <option value="all">All Quotes</option>
-            <option value="PENDING">Pending</option>
-            <option value="CONFIRMED">Confirmed</option>
-            <option value="COMPLETED">Completed</option>
-            <option value="CANCELLED">Cancelled</option>
-          </select>
-          <Filter className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
-        </div>
-      </div>
-
-      {isLoading ? (
-        <div className="flex items-center justify-center h-64">
-          <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
-        </div>
-      ) : filteredQuotes.length === 0 ? (
-        <div className="text-center py-12 bg-white rounded shadow-sm">
-          <p className="text-gray-500">
-            {filter === "all"
-              ? "You haven't submitted any quotes yet"
-              : `No ${filter.toLowerCase()} quotes`}
-          </p>
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredQuotes.map((quote) => (
-            <div
-              key={quote.id}
-              className="bg-white rounded shadow-sm p-6 hover:shadow-md transition-shadow"
-            >
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    {getServiceIcon(quote.serviceType)}
-                    <span className="text-sm font-medium text-gray-600 capitalize">
-                      {quote.serviceType.replace(/([A-Z])/g, " $1").trim()}
-                    </span>
-                  </div>
-                  {getStatusBadge(quote.status)}
-                </div>
-
-                <div className="space-y-3">
-                  <div className="flex items-start gap-2">
-                    <MapPin className="h-5 w-5 text-gray-400 flex-shrink-0 mt-0.5" />
-                    <div>
-                      <p className="text-sm text-gray-600">From</p>
-                      <p className="font-medium">{quote.origin}</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <MapPin className="h-5 w-5 text-gray-400 flex-shrink-0 mt-0.5" />
-                    <div>
-                      <p className="text-sm text-gray-600">To</p>
-                      <p className="font-medium">{quote.destination}</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-2 pt-2 border-t">
-                  <Calendar className="h-5 w-5 text-gray-400" />
-                  <p className="text-sm text-gray-600">
-                    {new Date(quote.moveDate).toLocaleDateString(undefined, {
-                      weekday: "long",
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
-                  </p>
-                </div>
-
-                {quote.message && (
-                  <div className="pt-2 border-t">
-                    <p className="text-sm text-gray-600">{quote.message}</p>
-                  </div>
-                )}
-              </div>
+            <div className="relative">
+              <select
+                value={filter}
+                onChange={(e) =>
+                  setFilter(e.target.value as "all" | QuoteStatus)
+                }
+                className="appearance-none bg-white border border-gray-300 rounded py-2 pl-3 pr-10 text-sm font-medium text-gray-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              >
+                <option value="all">All Quotes</option>
+                <option value="PENDING">Pending</option>
+                <option value="CONFIRMED">Confirmed</option>
+                <option value="COMPLETED">Completed</option>
+                <option value="CANCELLED">Cancelled</option>
+              </select>
+              <Filter className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none" />
             </div>
-          ))}
+          </div>
+
+          {isLoading ? (
+            <div className="flex items-center justify-center h-64">
+              <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
+            </div>
+          ) : filteredQuotes.length === 0 ? (
+            <div className="text-center py-12 bg-white rounded shadow-sm">
+              <p className="text-gray-500">
+                {filter === "all"
+                  ? "You haven't submitted any quotes yet"
+                  : `No ${filter.toLowerCase()} quotes`}
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {filteredQuotes.map((quote) => (
+                <div
+                  key={quote.id}
+                  className="bg-white rounded shadow-sm p-6 hover:shadow-md transition-shadow"
+                >
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        {getServiceIcon(quote.serviceType)}
+                        <span className="text-sm font-medium text-gray-600 capitalize">
+                          {quote.serviceType.replace(/([A-Z])/g, " $1").trim()}
+                        </span>
+                      </div>
+                      {getStatusBadge(quote.status)}
+                    </div>
+
+                    <div className="space-y-3">
+                      <div className="flex items-start gap-2">
+                        <MapPin className="h-5 w-5 text-gray-400 flex-shrink-0 mt-0.5" />
+                        <div>
+                          <p className="text-sm text-gray-600">From</p>
+                          <p className="font-medium">{quote.origin}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-2">
+                        <MapPin className="h-5 w-5 text-gray-400 flex-shrink-0 mt-0.5" />
+                        <div>
+                          <p className="text-sm text-gray-600">To</p>
+                          <p className="font-medium">{quote.destination}</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 pt-2 border-t">
+                      <Calendar className="h-5 w-5 text-gray-400" />
+                      <p className="text-sm text-gray-600">
+                        {new Date(quote.moveDate).toLocaleDateString(
+                          undefined,
+                          {
+                            weekday: "long",
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          }
+                        )}
+                      </p>
+                    </div>
+
+                    {quote.message && (
+                      <div className="pt-2 border-t">
+                        <p className="text-sm text-gray-600">{quote.message}</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
-      )}
-    </div>
+      </main>
+    </Container>
   );
 }

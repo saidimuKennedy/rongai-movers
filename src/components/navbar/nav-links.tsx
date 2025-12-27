@@ -5,7 +5,6 @@ const links = [
   { name: "Home", href: "/" },
   { name: "About us", href: "/#about" },
   { name: "Testimonials", href: "/#testimonials" },
-  { name: "Contact", href: "/#contact" },
 ];
 
 export default function NavLinks() {

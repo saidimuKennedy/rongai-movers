@@ -96,3 +96,24 @@ enum Role {
   MOVER
   ADMIN
 }
+
+enum QouteStatus {
+  PENDING
+  ACCEPTED
+  REJECTED  
+  COMPLETED
+  CANCELLED
+}
+
+model Testimonial {
+   id              String    @id @default(cuid())
+  rating          Int
+  name            String?
+  location        String?
+  testimonialText String
+  description     String?  
+  modalImage      String?  
+  profileImage    String?
+  verified        Boolean   @default(false)
+  createdAt       DateTime  @default(now())
+  }

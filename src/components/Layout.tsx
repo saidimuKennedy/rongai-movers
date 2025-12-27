@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Footer from "./Footer";
+import Footer from "./home-page/Footer";
 import toast, { Toaster } from "react-hot-toast";
 import Navbar from "./navbar/nav-bar";
 

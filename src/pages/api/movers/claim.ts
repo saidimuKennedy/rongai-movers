@@ -1,68 +1,70 @@
-import prisma from "@/lib/prisma";
 import { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
 import { Session } from "next-auth";
-import { Role } from "@prisma/client";
+import prisma from "@/lib/prisma";
+import { QuoteStatus, Role } from "@prisma/client";
+
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method !== "POST") {
-    res.setHeader("Allow", ["POST"]);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
-  }
-
   const session = (await getServerSession(req, res, authOptions)) as Session & {
-    user: { id: string; email: string; role: Role };
+    user: { role: Role; id: string };
   };
 
   if (!session || !session.user || session.user.role !== Role.MOVER) {
-    return res.status(403).json({ error: "Acess Forbidden" });
+    return res.status(401).json({ error: "Unauthorized" });
+  }
+
+  if (req.method !== "POST") {
+    res.setHeader("Allow", ["POST"]);
+    return res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 
   const { quoteId } = req.body;
 
+  if (!quoteId) {
+    return res.status(400).json({ error: "Quote ID is required." });
+  }
+
   try {
-    if (!quoteId) {
-      return res.status(400).json({ error: "Quote ID is required" });
-    }
-
-    const currentMoverProfile = await prisma.mover.findUnique({
+    const updatedQuote = await prisma.quote.updateMany({
       where: {
-        userId: session.user.id,
+        id: quoteId,
+        moverId: null,
+        status: QuoteStatus.PENDING, 
       },
-      select: { id: true },
+      data: {
+        moverId: session.user.id,
+        status: QuoteStatus.CONFIRMED, 
+      },
     });
 
-    if (!currentMoverProfile) {
-      return res
-        .status(404)
-        .json({
-          error:
-            "Mover profile not found for this user. Please ensure your MOVER user has an associated Mover profile.",
-        });
+    if (updatedQuote.count === 0) {
+      const existingQuote = await prisma.quote.findUnique({
+        where: { id: quoteId },
+      });
+
+      if (existingQuote?.status !== QuoteStatus.PENDING) {
+        return res
+          .status(409)
+          .json({
+            error: "Quote has already been claimed or is no longer available.",
+          });
+      } else {
+        return res
+          .status(404)
+          .json({ error: "Quote not found or no longer available." });
+      }
     }
 
-    const quote = await prisma.quote.update({
-      where: { id: quoteId, status: "pending", moverId: null },
-      data: {
-        mover: {
-          connect: { id: currentMoverProfile.id },
-        },
-        status: "assigned",
-      },
-    });
-
-    res.status(200).json(quote);
+    res.status(200).json({ message: "Quote claimed successfully!" });
   } catch (error) {
     console.error("Error claiming quote:", error);
     res
-      .status(400)
-      .json({
-        error:
-          "Could not claim quote. It might already be claimed or does not exist.",
-      });
+      .status(500)
+      .json({ error: "Failed to claim quote due to a server error." });
   }
 }

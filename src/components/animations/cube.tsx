@@ -1,7 +1,7 @@
-import About from "@/components/AboutSection";
-import Contact from "@/components/ContactSection";
+import About from "@/components/home-page/AboutSection";
+import Contact from "@/components/home-page/ContactSection";
 // import TrackingSection from "@/components/TrackingSection";
-import Gallery from "@/components/GallerySection";
+import Gallery from "@/components/home-page/GallerySection";
 //import  Offers from "@/components/OffersSection"
 //import  Careers from "@/components/CareersSection"
 //import  Portfolio from "@/components/PortfolioSection"
@@ -13,7 +13,7 @@ import {
   RefreshCcw,
 } from "lucide-react";
 import React, { useState, useEffect, useRef } from "react";
-import Testimonials from "../testimonials";
+import Testimonials from "../home-page/TestimonialsSection";
 
 const faceComponents = {
   About: About,
@@ -161,9 +161,10 @@ export default function BoxCube(): JSX.Element {
   };
 
   const activeFaceName = activeFace !== null ? faces[activeFace].name : null;
-  const ComponentToRender: React.ElementType | null = activeFaceName && activeFaceName in faceComponents
-    ? faceComponents[activeFaceName as keyof typeof faceComponents]
-    : null;
+  const ComponentToRender: React.ElementType | null =
+    activeFaceName && activeFaceName in faceComponents
+      ? faceComponents[activeFaceName as keyof typeof faceComponents]
+      : null;
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen w-full bg-gray-50 gap-8 overflow-hidden relative">
@@ -190,7 +191,7 @@ export default function BoxCube(): JSX.Element {
             >
               <ChevronLeft size={24} />
             </button>
-             {/* 3. Render the component dynamically */}
+            {/* 3. Render the component dynamically */}
             {ComponentToRender ? (
               <ComponentToRender /> // This line is causing the error
             ) : (
@@ -202,7 +203,6 @@ export default function BoxCube(): JSX.Element {
               </div>
             )}
           </div>
-
 
           {/* Animated background elements */}
           {/* <div className="absolute inset-0 opacity-10">

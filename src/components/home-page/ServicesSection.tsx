@@ -32,18 +32,6 @@ const serviceHighlights = [
   },
 ];
 
-const Container = ({
-  children,
-  className = "",
-}: {
-  children: React.ReactNode;
-  className?: string;
-}) => (
-  <div className={`w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 ${className}`}>
-    {children}
-  </div>
-);
-
 // Animation variants
 interface ServiceRibbonProps {
   text: string;
@@ -130,7 +118,7 @@ const ServiceCard = ({ service, index }: ServiceCardProps) => (
           alt={service.alt}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
         />
-        {/* Image overlay for better text contrast */}
+        {/* Image overlay  */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
       </div>
 
@@ -150,50 +138,39 @@ const ServiceCard = ({ service, index }: ServiceCardProps) => (
 
 const ServicesSection = () => {
   return (
-    <section
-      id="services"
-      className="py-16 sm:py-20 bg-gradient-to-br from-gray-50 to-white relative overflow-hidden"
-    >
-      {/* Background decoration */}
-      <div className="absolute top-0 left-0 w-full h-full opacity-30">
-        <div className="absolute top-20 left-10 w-32 h-32 bg-orange-200 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-20 right-10 w-40 h-40 bg-blue-200 rounded-full blur-3xl"></div>
-      </div>
-
-      <Container className="relative z-10">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-12 sm:mb-16"
+    <>
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+        className="text-center mb-12 sm:mb-16"
+      >
+        <motion.h2
+          className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-900 mb-4 sm:mb-6"
+          whileHover={{ scale: 1.02 }}
+          transition={{ duration: 0.2 }}
         >
-          <motion.h2
-            className="text-2xl sm:text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-900 mb-4 sm:mb-6"
-            whileHover={{ scale: 1.02 }}
-            transition={{ duration: 0.2 }}
-          >
-            Our Core Services
-          </motion.h2>
-          <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto">
-            We offer professional, reliable moving and errand services to make
-            your life easier.
-          </p>
-        </motion.div>
+          Our Core Services
+        </motion.h2>
+        <p className="text-lg sm:text-xl text-gray-600 max-w-2xl mx-auto">
+          We offer professional, reliable moving and errand services to make
+          your life easier.
+        </p>
+      </motion.div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.8 }}
-          className="grid sm:grid-cols-2 lg:grid-cols-3  gap-6 sm:gap-8"
-        >
-          {serviceHighlights.map((service, index) => (
-            <ServiceCard key={index} service={service} index={index} />
-          ))}
-        </motion.div>
-      </Container>
-    </section>
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8 }}
+        className="grid sm:grid-cols-2 lg:grid-cols-3  gap-6 sm:gap-8"
+      >
+        {serviceHighlights.map((service, index) => (
+          <ServiceCard key={index} service={service} index={index} />
+        ))}
+      </motion.div>
+    </>
   );
 };
 

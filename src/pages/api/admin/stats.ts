@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
 import prisma from "@/lib/prisma";
-import { Role } from "@prisma/client";
+import { Role, QuoteStatus } from "@prisma/client";
 
 export default async function handler(
   req: NextApiRequest,
@@ -25,17 +25,17 @@ export default async function handler(
       // Get total quotes count
       prisma.quote.count(),
 
-      // Get pending quotes count
+      // Get pending quotes count, using the enum
       prisma.quote.count({
         where: {
-          status: "pending",
+          status: QuoteStatus.PENDING,
         },
       }),
 
-      // Get completed quotes count
+      // Get completed quotes count, using the enum
       prisma.quote.count({
         where: {
-          status: "completed",
+          status: QuoteStatus.COMPLETED,
         },
       }),
 

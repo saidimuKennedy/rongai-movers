@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Mail, Phone, MapPin } from "lucide-react"; // Make sure to have lucide-react installed
+import { Mail, Phone, MapPin } from "lucide-react"; 
 
 export default function Contact() {
   const containerVariants: any = {
