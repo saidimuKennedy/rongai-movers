@@ -29,7 +29,8 @@
     "types/**/*.d.ts",
     "src/**/*.ts",
     "src/**/*.tsx",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    "types/quote.ts"
   ],
   "exclude": ["node_modules"]
 }

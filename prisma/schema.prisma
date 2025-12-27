@@ -97,7 +97,7 @@ enum Role {
   ADMIN
 }
 
-enum QouteStatus {
+enum QuoteStatus {
   PENDING
   ACCEPTED
   REJECTED  

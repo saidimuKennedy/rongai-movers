@@ -3,7 +3,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]";
 import { Session } from "next-auth";
 import prisma from "@/lib/prisma";
-import { QuoteStatus, Role } from "@prisma/client";
+import { Role } from "@prisma/client";
 
 
 export default async function handler(
@@ -34,11 +34,11 @@ export default async function handler(
       where: {
         id: quoteId,
         moverId: null,
-        status: QuoteStatus.PENDING, 
+        status: "PENDING", 
       },
       data: {
         moverId: session.user.id,
-        status: QuoteStatus.CONFIRMED, 
+        status: "CONFIRMED", 
       },
     });
 
@@ -47,7 +47,7 @@ export default async function handler(
         where: { id: quoteId },
       });
 
-      if (existingQuote?.status !== QuoteStatus.PENDING) {
+      if (existingQuote?.status !== "PENDING") {
         return res
           .status(409)
           .json({

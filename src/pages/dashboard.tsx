@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import {
@@ -12,9 +12,29 @@ import {
   XCircle,
   Filter,
 } from "lucide-react";
-import type { Quote, QuoteStatus, ServiceType } from "@/types/quote";
 import toast from "react-hot-toast";
-import React from "react";
+
+interface Quote {
+  id: string;
+  userId: string;
+  moverId?: string | null;
+  origin: string;
+  destination: string;
+  moveDate: string;
+  message?: string | null;
+  serviceType: "moving" | "office" | "tv" | "longDistance" | "errand";
+  status: "CANCELLED" | "COMPLETED" | "CONFIRMED" | "PENDING";
+  createdAt: string;
+  updatedAt: string;
+  user?: {
+    name: string;
+    email: string;
+    phone?: string;
+  };
+}
+
+type ServiceType = Quote["serviceType"];
+type QuoteStatus = Quote["status"];
 
 export default function Dashboard() {
   const { data: session, status } = useSession();
