@@ -1,3 +1,12 @@
+/**
+ * @file Quote Request Form Component
+ * @module components/forms/QuoteForm
+ * @description This React component renders a comprehensive form for users to request a moving quote.
+ *              It collects user details (name, email, phone), move specifics (origin, destination, date, service type),
+ *              and additional messages. The form integrates with NextAuth for user authentication,
+ *              uses `react-hot-toast` for notifications, and sends data to the `/api/quotes` endpoint.
+ *              It dynamically populates user details if authenticated and handles loading and error states.
+ */
 import { useState, useEffect } from "react";
 import { useShadModal } from "@/context/ModalContext";
 import toast from "react-hot-toast";

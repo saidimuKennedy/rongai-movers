@@ -1,5 +1,23 @@
+/**
+ * @file Authentication Error Page Component
+ * @module pages/errorPage
+ * @description This React component renders a dedicated page for displaying
+ *              authentication-related errors. It can display a custom error message
+ *              passed via URL query parameters and provides a button to navigate
+ *              the user back to the home page.
+ */
 import { useRouter } from "next/router";
 
+/**
+ * Renders a generic error page, primarily for authentication failures.
+ *
+ * This component retrieves an `error` message from the URL query parameters
+ * and displays it to the user. If no specific error message is provided,
+ * a default message is shown. A "Return Home" button allows the user to
+ * navigate back to the application's root.
+ *
+ * @returns {JSX.Element} The authentication error page UI.
+ */
 export default function ErrorPage() {
   const router = useRouter();
   const { error } = router.query;

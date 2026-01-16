@@ -1,3 +1,10 @@
+/**
+ * @file Frequently Asked Questions (FAQs) Section Component
+ * @module components/home-page/Faqs
+ * @description This React component displays a collapsible list of Frequently Asked Questions.
+ *              It allows users to toggle the visibility of answers for each question.
+ *              The component uses `framer-motion` for animations and `lucide-react` for icons.
+ */
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";

@@ -1,6 +1,25 @@
+/**
+ * @file Unauthorized Access Page Component
+ * @module pages/unauthorized
+ * @description This React component displays a page informing the user that
+ *              they do not have the necessary permissions to access a requested resource.
+ *              It provides a clear message about the access denial and, if the user is
+ *              authenticated, displays their current role. A prominent button allows
+ *              the user to return to their dashboard.
+ */
 import { Link, ArrowLeft } from "lucide-react";
 import { useSession } from "next-auth/react";
 
+/**
+ * Renders the Unauthorized access page.
+ *
+ * This component is displayed when a user attempts to navigate to a page
+ * for which they do not have the required role or permissions.
+ * It fetches the user's session to potentially display their current role
+ * and offers a clear navigation option back to the dashboard.
+ *
+ * @returns {JSX.Element} The unauthorized access page UI.
+ */
 export default function Unauthorized() {
   const { data: session } = useSession();
   return (

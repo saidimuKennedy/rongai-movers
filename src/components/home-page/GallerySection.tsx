@@ -1,3 +1,11 @@
+/**
+ * @file Gallery Section Component
+ * @module components/home-page/GallerySection
+ * @description This React component displays an image gallery using a carousel.
+ *              It showcases various aspects of the moving service through a collection of images.
+ *              The component utilizes `framer-motion` for animations, `next/image` for image optimization,
+ *              and a custom `Carousel` UI component for interactive browsing.
+ */
 import { motion } from "framer-motion";
 import Image from "next/image";
 import {

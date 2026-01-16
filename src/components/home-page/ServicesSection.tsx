@@ -1,3 +1,10 @@
+/**
+ * @file Services Section Component
+ * @module components/home-page/ServicesSection
+ * @description This React component displays an overview of the core services offered by the moving company.
+ *              It presents each service as an animated card with an image, title, description, and a promotional ribbon.
+ *              The component utilizes `framer-motion` for scroll-triggered animations and manages service data internally.
+ */
 import React from "react";
 import { motion } from "framer-motion";
 

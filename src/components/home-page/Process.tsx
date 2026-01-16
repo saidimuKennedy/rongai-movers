@@ -1,3 +1,11 @@
+/**
+ * @file How It Works Process Section Component
+ * @module components/home-page/Process
+ * @description This React component illustrates the three-step process of the moving service,
+ *              from initial contact to relaxation post-move. It uses a visually engaging layout
+ *              with icons, titles, and descriptions for each step.
+ *              The component utilizes `framer-motion` for animations and `lucide-react` for icons.
+ */
 import { motion } from "framer-motion";
 import { Phone, Package, Shield } from "lucide-react";
 

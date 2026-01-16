@@ -1,3 +1,11 @@
+/**
+ * @file Quote Request Button Component
+ * @module components/navbar/quote-button
+ * @description This React component renders a button that, when clicked, initiates the quote request process.
+ *              It checks the user's authentication status: if unauthenticated, it prompts the user to sign in
+ *              via a modal; otherwise, it opens the `QuoteForm` in a modal.
+ *              The component integrates with NextAuth, a modal context, and `react-hot-toast` for user feedback.
+ */
 import { motion } from "framer-motion";
 import { useShadModal } from "@/context/ModalContext";
 import { useSession } from "next-auth/react";

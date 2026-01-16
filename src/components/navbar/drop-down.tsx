@@ -1,3 +1,11 @@
+/**
+ * @file User Dropdown Component
+ * @module components/navbar/drop-down
+ * @description This React component provides a dropdown menu for authenticated users in the navigation bar.
+ *              It displays the user's name, allows navigation to their respective dashboard based on their role,
+ *              and provides a sign-out option. The dropdown's visibility is controlled by state,
+ *              and it closes automatically when clicking outside.
+ */
 import { ChevronDown, LayoutDashboard, LogOut } from "lucide-react";
 import Link from "next/link"; 
 import { signOut } from "next-auth/react";

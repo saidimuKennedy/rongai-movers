@@ -1,3 +1,12 @@
+/**
+ * @file Sign-Up Form Component
+ * @module components/forms/SignUpForm
+ * @description This React component provides a user interface for creating a new account.
+ *              It collects user details (name, email, password, confirm password),
+ *              validates password consistency, and sends registration data to the `/api/register` endpoint.
+ *              Upon successful registration, it automatically signs the user in and redirects to the dashboard.
+ *              It integrates with NextAuth.js for sign-in after registration and uses a modal context.
+ */
 import { useState } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";

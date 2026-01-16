@@ -1,3 +1,14 @@
+/**
+ * @file Mover Dashboard Page Component
+ * @module pages/mover/dashboard
+ * @description This React component renders the dashboard for users with the 'MOVER' role.
+ *              It provides an interface for movers to view available moving quotes
+ *              that can be claimed, and to manage the status of quotes they have
+ *              already claimed (their "My Jobs").
+ *              Access is restricted to movers using the `useRequireAuth` hook.
+ *              The dashboard interacts with mover-specific API endpoints to fetch
+ *              and update quote information.
+ */
 import useRequireAuth from "@/hooks/useRequiredAuth";
 import { Role } from "@prisma/client";
 import { useEffect, useState } from "react";
@@ -13,6 +24,16 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 
+/**
+ * Interface representing a quote relevant to a mover.
+ * @interface Quote
+ * @property {string} id - The unique identifier of the quote.
+ * @property {string} origin - The origin address for the move.
+ * @property {string} destination - The destination address for the move.
+ * @property {string} moveDate - The requested date for the move (ISO string).
+ * @property {string} status - The current status of the quote.
+ * @property {{ name: string; email: string; phone?: string; }} user - Details of the user who submitted the quote.
+ */
 interface Quote {
   id: string;
   origin: string;
@@ -26,6 +47,20 @@ interface Quote {
   };
 }
 
+/**
+ * The Mover Dashboard page component.
+ *
+ * This component provides an interface for movers to:
+ * - Switch between "Available Jobs" (unclaimed, pending quotes) and "My Jobs" (claimed quotes).
+ * - Claim available jobs using the `/api/movers/claim` endpoint.
+ * - Update the status of their claimed jobs (e.g., to "COMPLETED" or "CANCELLED") using the `/api/movers/update-status` endpoint.
+ *
+ * It uses `useRequireAuth(Role.MOVER)` to enforce access and manages its state for
+ * quotes and active tabs. Data fetching and status updates are handled with API calls
+ * and user feedback is provided via `react-hot-toast`.
+ *
+ * @returns {JSX.Element} The Mover Dashboard UI.
+ */
 export default function MoverDashboard() {
   useRequireAuth(Role.MOVER);
   const { data: session, status } = useSession();
@@ -53,6 +88,14 @@ export default function MoverDashboard() {
     }
   };
 
+  /**
+   * A simple container component for consistent padding and max-width.
+   *
+   * @param {object} props - The component props.
+   * @param {React.ReactNode} props.children - The content to be rendered inside the container.
+   * @param {string} [props.className=""] - Additional CSS classes to apply to the container.
+   * @returns {JSX.Element} A div element acting as a container.
+   */
   const Container = ({
     children,
     className = "",
@@ -67,6 +110,14 @@ export default function MoverDashboard() {
     </div>
   );
 
+  /**
+   * Claims an available quote by sending a POST request to the `/api/movers/claim` endpoint.
+   * On success, removes the claimed quote from the local state and shows a success toast.
+   * On failure, logs the error and shows an error toast.
+   *
+   * @param {string} id - The ID of the quote to claim.
+   * @returns {Promise<void>}
+   */
   const claimQuote = async (id: string) => {
     try {
       const res = await fetch("/api/movers/claim", {
@@ -85,6 +136,15 @@ export default function MoverDashboard() {
     }
   };
 
+  /**
+   * Updates the status of a claimed quote by sending a POST request to the `/api/movers/update-status` endpoint.
+   * On success, refetches the quotes to reflect the status change and shows a success toast.
+   * On failure, logs the error and shows an error toast.
+   *
+   * @param {string} quoteId - The ID of the quote to update.
+   * @param {string} status - The new status for the quote.
+   * @returns {Promise<void>}
+   */
   const updateQuoteStatus = async (quoteId: string, status: string) => {
     try {
       const res = await fetch("/api/movers/update-status", {

@@ -1,10 +1,26 @@
+/**
+ * @file Admin Dashboard Page Component
+ * @module pages/admin/dashboard
+ * @description This React component renders the administrative dashboard, providing
+ *              an overview of system statistics and user management capabilities.
+ *              It restricts access to users with the 'ADMIN' role using a custom hook.
+ *              The dashboard fetches and displays data from various admin-specific
+ *              API endpoints and allows administrators to update user roles.
+ */
 import useRequireAuth from "@/hooks/useRequiredAuth";
 import { Role } from "@prisma/client";
 import { useState, useEffect } from "react";
 import { Loader2, Users, FileText, CheckCircle, Clock } from "lucide-react";
 import toast from "react-hot-toast";
 
-// Interface for a user, based on what the API would return
+/**
+ * Interface representing a user object as returned by the API.
+ * @interface User
+ * @property {string} id - The unique identifier of the user.
+ * @property {string | null} name - The name of the user, or null if not set.
+ * @property {string} email - The email address of the user.
+ * @property {Role} role - The role of the user (e.g., ADMIN, MOVER, CLIENT).
+ */
 interface User {
   id: string;
   name: string | null;
@@ -12,7 +28,16 @@ interface User {
   role: Role;
 }
 
-// Interface for recent activity
+/**
+ * Interface representing a recent activity entry for display on the dashboard.
+ * @interface Activity
+ * @property {string} id - The unique identifier of the activity (e.g., quote ID).
+ * @property {{ name: string }} user - The user associated with the activity, containing their name.
+ * @property {string} status - The status of the activity (e.g., PENDING, COMPLETED).
+ * @property {string} origin - The origin location of the quote.
+ * @property {string} destination - The destination location of the quote.
+ * @property {string} updatedAt - The timestamp of the last update to the activity.
+ */
 interface Activity {
   id: string;
   user: { name: string };
@@ -22,6 +47,21 @@ interface Activity {
   updatedAt: string;
 }
 
+/**
+ * The Admin Dashboard page component.
+ *
+ * This component provides an interface for administrators to:
+ * - View key statistics (total quotes, pending quotes, completed quotes, active movers).
+ * - See recent activity in the system.
+ * - Manage user roles, including updating a user's role.
+ *
+ * It uses `useRequireAuth(Role.ADMIN)` to ensure only authenticated admin users can access this page.
+ * Data is fetched from `/api/admin/stats` and `/api/admin/users`, and user roles are updated
+ * via `/api/admin/update-role`. Loading states and notifications are handled using `useState`,
+ * `useEffect`, and `react-hot-toast`.
+ *
+ * @returns {JSX.Element} The Admin Dashboard UI.
+ */
 export default function AdminDashboard() {
   useRequireAuth(Role.ADMIN);
   const [isLoading, setIsLoading] = useState(true);
@@ -95,6 +135,14 @@ export default function AdminDashboard() {
     }
   };
 
+  /**
+   * A simple container component for consistent padding and max-width.
+   *
+   * @param {object} props - The component props.
+   * @param {React.ReactNode} props.children - The content to be rendered inside the container.
+   * @param {string} [props.className=""] - Additional CSS classes to apply to the container.
+   * @returns {JSX.Element} A div element acting as a container.
+   */
   const Container = ({
     children,
     className = "",
@@ -109,6 +157,16 @@ export default function AdminDashboard() {
     </div>
   );
 
+  /**
+   * A reusable card component for displaying a single statistic.
+   *
+   * @param {object} props - The component props.
+   * @param {string} props.title - The title of the statistic.
+   * @param {number} props.value - The numerical value of the statistic.
+   * @param {React.ElementType} props.icon - The Lucide icon component to display.
+   * @param {string} props.color - The Tailwind CSS color class for the value and icon (e.g., "text-blue-600").
+   * @returns {JSX.Element} A styled card displaying the statistic.
+   */
   const StatCard = ({ title, value, icon: Icon, color }: any) => (
     <div className="bg-white p-6 rounded shadow-sm hover:shadow-md transition-shadow">
       <div className="flex items-center justify-between">

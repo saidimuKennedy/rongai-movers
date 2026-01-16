@@ -1,3 +1,11 @@
+/**
+ * @file Navigation Links Component
+ * @module components/navbar/nav-links
+ * @description This React component renders a collection of navigation links for the application.
+ *              It dynamically applies active styling based on the current route
+ *              and provides smooth transitions for hover effects.
+ *              It is designed to be used within a navigation bar.
+ */
 import Link from "next/link";
 import { useRouter } from "next/router";
 

@@ -1,3 +1,10 @@
+/**
+ * @file Footer Component
+ * @module components/home-page/Footer
+ * @description This React component renders the application's footer, providing essential navigation,
+ *              contact information, business hours, service areas, and social media links.
+ *              It includes sections for company info, services, quick links, and a newsletter signup.
+ */
 import {
   Phone,
   Mail,

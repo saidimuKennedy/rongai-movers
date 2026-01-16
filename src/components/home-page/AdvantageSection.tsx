@@ -1,3 +1,10 @@
+/**
+ * @file Advantages Section Component
+ * @module components/home-page/AdvantageSection
+ * @description This React component showcases the key advantages and unique selling points of the moving service.
+ *              It features a grid of animated cards, each highlighting a specific benefit with an icon, title, and description.
+ *              The component utilizes `framer-motion` for scroll-triggered animations and `lucide-react` for icons.
+ */
 import { motion } from "framer-motion";
 import {
   Award,

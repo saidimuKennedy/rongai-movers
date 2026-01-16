@@ -1,3 +1,13 @@
+/**
+ * @file User Dashboard Page Component
+ * @module pages/dashboard
+ * @description This React component serves as the main dashboard for authenticated users.
+ *              It automatically redirects users with 'ADMIN' or 'MOVER' roles to their
+ *              respective dashboards. For other authenticated users (e.g., 'CLIENT'),
+ *              it fetches and displays their submitted moving quotes, offering filtering
+ *              options based on quote status. It provides a personalized overview
+ *              of a user's quote history.
+ */
 import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -14,6 +24,22 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 
+/**
+ * Interface representing a moving quote object.
+ * @interface Quote
+ * @property {string} id - The unique identifier of the quote.
+ * @property {string} userId - The ID of the user who submitted the quote.
+ * @property {string | null} [moverId] - The ID of the mover assigned to the quote, or null if unclaimed.
+ * @property {string} origin - The origin address for the move.
+ * @property {string} destination - The destination address for the move.
+ * @property {string} moveDate - The requested date for the move (ISO string).
+ * @property {string | null} [message] - Optional message from the user.
+ * @property {"moving" | "office" | "tv" | "longDistance" | "errand"} serviceType - The type of service requested.
+ * @property {"CANCELLED" | "COMPLETED" | "CONFIRMED" | "PENDING"} status - The current status of the quote.
+ * @property {string} createdAt - The timestamp when the quote was created (ISO string).
+ * @property {string} updatedAt - The timestamp when the quote was last updated (ISO string).
+ * @property {{ name: string; email: string; phone?: string; } | undefined} [user] - Optional user details.
+ */
 interface Quote {
   id: string;
   userId: string;
@@ -33,9 +59,30 @@ interface Quote {
   };
 }
 
+/**
+ * Type alias for the different service types available for a quote.
+ * @typedef {Quote["serviceType"]} ServiceType
+ */
 type ServiceType = Quote["serviceType"];
+/**
+ * Type alias for the different possible statuses of a quote.
+ * @typedef {Quote["status"]} QuoteStatus
+ */
 type QuoteStatus = Quote["status"];
 
+/**
+ * The main Dashboard component for authenticated users.
+ *
+ * This component handles:
+ * - **Authentication & Authorization**: Redirects unauthenticated users to sign-in.
+ *   Redirects 'ADMIN' and 'MOVER' roles to their specific dashboards.
+ * - **Data Fetching**: Fetches the user's quotes from `/api/quotes`.
+ * - **State Management**: Manages loading states, the list of quotes, and the active filter.
+ * - **UI Presentation**: Displays quotes in a grid format with status badges and service icons,
+ *   and provides a dropdown to filter quotes by status.
+ *
+ * @returns {JSX.Element} The user's personalized dashboard UI.
+ */
 export default function Dashboard() {
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -78,6 +125,14 @@ export default function Dashboard() {
     }
   };
 
+  /**
+   * A simple container component for consistent padding and max-width.
+   *
+   * @param {object} props - The component props.
+   * @param {React.ReactNode} props.children - The content to be rendered inside the container.
+   * @param {string} [props.className=""] - Additional CSS classes to apply to the container.
+   * @returns {JSX.Element} A div element acting as a container.
+   */
   const Container = ({
     children,
     className = "",
@@ -92,6 +147,12 @@ export default function Dashboard() {
     </div>
   );
 
+  /**
+   * Returns the appropriate Lucide icon for a given service type.
+   *
+   * @param {ServiceType} serviceType - The type of service (e.g., "moving", "office").
+   * @returns {JSX.Element} The corresponding icon component.
+   */
   const getServiceIcon = (serviceType: ServiceType) => {
     const icons = {
       moving: <Truck className="h-5 w-5 text-orange-500" />,
@@ -103,6 +164,12 @@ export default function Dashboard() {
     return icons[serviceType] || icons.errand;
   };
 
+  /**
+   * Returns a styled badge component for a given quote status.
+   *
+   * @param {QuoteStatus} status - The status of the quote (e.g., "PENDING", "COMPLETED").
+   * @returns {JSX.Element} A span element styled as a status badge.
+   */
   const getStatusBadge = (status: QuoteStatus) => {
     const badges = {
       PENDING: { bg: "bg-yellow-100", text: "text-yellow-800", icon: Clock },

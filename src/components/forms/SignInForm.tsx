@@ -1,3 +1,11 @@
+/**
+ * @file Sign-In Form Component
+ * @module components/forms/SignInForm
+ * @description This React component provides a user interface for signing into the application.
+ *              It supports authentication via credentials (email and password) and Google OAuth.
+ *              The form integrates with NextAuth.js for authentication, handles loading and error states,
+ *              and allows navigation to the sign-up form via a modal.
+ */
 import { useState } from "react";
 import { signIn } from "next-auth/react";
 import { useShadModal } from "@/context/ModalContext";

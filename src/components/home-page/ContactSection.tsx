@@ -1,3 +1,10 @@
+/**
+ * @file Contact Section Component
+ * @module components/home-page/ContactSection
+ * @description This React component provides a dedicated section for contact information and a contact form.
+ *              It includes a hero section, an embedded Google Map for location, detailed contact information (address, phone, email),
+ *              and a form for users to send messages. The component uses `framer-motion` for animations.
+ */
 import { motion } from "framer-motion";
 import { Mail, Phone, MapPin } from "lucide-react"; 
 

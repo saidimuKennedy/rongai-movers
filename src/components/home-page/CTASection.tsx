@@ -1,3 +1,11 @@
+/**
+ * @file Call-to-Action (CTA) Section Component
+ * @module components/home-page/CTASection
+ * @description This React component presents a prominent call-to-action section on the homepage,
+ *              encouraging users to get a free quote or call the moving service.
+ *              It displays a compelling headline, a sub-headline, and interactive buttons for engagement.
+ *              The component utilizes `framer-motion` for animations and `lucide-react` for icons.
+ */
 import { motion } from "framer-motion";
 import { Phone, ArrowRight } from "lucide-react";
 import QuoteButton from "../navbar/quote-button";

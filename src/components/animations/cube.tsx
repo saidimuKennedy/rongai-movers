@@ -1,3 +1,12 @@
+/**
+ * @file Interactive 3D Cube Animation Component
+ * @module components/animations/cube
+ * @description This React component renders an interactive 3D cube, where each face
+ *              can display different content sections of the application. It features
+ *              dynamic rotation based on mouse movement and keyboard controls,
+ *              and allows users to "expand" a face to fullscreen to view its content.
+ *              This component provides an engaging visual navigation experience.
+ */
 import About from "@/components/home-page/AboutSection";
 import Contact from "@/components/home-page/ContactSection";
 // import TrackingSection from "@/components/TrackingSection";

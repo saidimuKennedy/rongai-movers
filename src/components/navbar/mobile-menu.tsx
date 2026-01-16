@@ -1,3 +1,11 @@
+/**
+ * @file Mobile Menu Component
+ * @module components/navbar/mobile-menu
+ * @description This React component provides a responsive navigation menu for mobile devices.
+ *              It displays a list of navigation links, contact information, a quote request button,
+ *              and either a user dropdown (if authenticated) or a sign-in button.
+ *              The menu's visibility is controlled by `isOpen` and `onClose` props.
+ */
 import Link from "next/link";
 import { Phone, PackageOpen } from "lucide-react";
 import QuoteButton from "./quote-button";

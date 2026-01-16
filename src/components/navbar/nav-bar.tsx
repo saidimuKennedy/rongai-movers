@@ -1,3 +1,12 @@
+/**
+ * @file Navigation Bar Component
+ * @module components/navbar/nav-bar
+ * @description This React component implements the main navigation bar for the application.
+ *              It features a dynamic background based on scroll position, a responsive design
+ *              with distinct layouts for desktop and mobile, and integrates authentication status
+ *              to display either a user dropdown or a sign-in option. It includes navigation links,
+ *              a quote request button, and a mobile menu toggle.
+ */
 "use client";
 import React, { useState, useEffect } from "react";
 import Link from "next/link";

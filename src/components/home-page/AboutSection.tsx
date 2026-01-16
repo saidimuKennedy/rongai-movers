@@ -1,3 +1,11 @@
+/**
+ * @file About Section Component
+ * @module components/home-page/AboutSection
+ * @description This React component displays the "About Us" section of the homepage.
+ *              It includes sections for the company's story, mission, and team,
+ *              using `framer-motion` for animations and `next/image` for optimized images.
+ *              It highlights the company's values and provides key statistics.
+ */
 import { motion } from "framer-motion";
 import Image from "next/image";
 

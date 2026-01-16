@@ -1,3 +1,13 @@
+/**
+ * @file Homepage Main Component
+ * @module components/home-page/HomePage
+ * @description This React component serves as the main container for the application's homepage.
+ *              It orchestrates and renders various sections including a hero area with statistics,
+ *              service highlights, an interactive 3D cube for navigation, a "How It Works" process flow,
+ *              advantages, testimonials, FAQs, and a call-to-action.
+ *              The component heavily utilizes `framer-motion` for rich animations and composes
+ *              multiple sub-components to build the complete landing page experience.
+ */
 import React from "react";
 import { motion } from "framer-motion";
 import {
